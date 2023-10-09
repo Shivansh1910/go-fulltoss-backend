@@ -1,0 +1,23 @@
+app: fulltoss-backend
+service: fulltoss-backend
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: ap-south-1
+  stage: prod
+
+package:
+  patterns:
+    - "!node_modules/**" # Exclude node_modules
+
+functions:
+  api:
+    handler: index.handler
+    events:
+      - httpApi: "*"
+    environment:
+      NODE_ENV: production
+      DEBUGGING: false
+      PORT: 3000
