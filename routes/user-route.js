@@ -18,13 +18,15 @@ router.post(
     .trim()
     .escape(),
 
-  body("name").trim().not().isEmpty(),
+  body("name").notEmpty().withMessage("Name is required").trim().escape(),
+
+  body("domain").notEmpty().withMessage("Domain is required").trim().escape(),
 
   userController.registerUser
 );
 
 router.get(
-  "/user/:email",
+  "/user/:email/:domain",
 
   param("email")
     .notEmpty()
@@ -34,13 +36,19 @@ router.get(
     .trim()
     .escape(),
 
+  param("domain").notEmpty().withMessage("Domain is required").trim().escape(),
+
   userController.getUser
 );
 
 router.get(
-  "/campaign/:id",
+  "/campaign/:identifier",
 
-  param("id").notEmpty().withMessage("Campaign ID is required").trim().escape(),
+  param("identifier")
+    .notEmpty()
+    .withMessage("Client identifier is required")
+    .trim()
+    .escape(),
 
   userController.getCampain
 );
@@ -48,11 +56,13 @@ router.get(
 router.post(
   "/submitResponse",
 
-  body("campaign_id")
+  body("identifier")
     .notEmpty()
-    .withMessage("Campaign ID is required")
+    .withMessage("Client Identifier is required")
     .trim()
     .escape(),
+
+  body("domain").notEmpty().withMessage("Domain is required").trim().escape(),
 
   body("email")
     .notEmpty()
@@ -78,7 +88,7 @@ router.post(
 );
 
 router.get(
-  "/getParticipatedCampaigns/:email",
+  "/getParticipatedCampaigns/:email/:domain",
 
   param("email")
     .notEmpty()
@@ -87,6 +97,8 @@ router.get(
     .withMessage("Invalid Email")
     .trim()
     .escape(),
+
+  param("domain").notEmpty().withMessage("Domain is required").trim().escape(),
 
   userController.getParticipatedCampaigns
 );
@@ -106,6 +118,8 @@ router.post(
     .withMessage("Campaign ID is required")
     .trim()
     .escape(),
+
+  body("domain").notEmpty().withMessage("Domain is required").trim().escape(),
 
   userController.getResponses
 );

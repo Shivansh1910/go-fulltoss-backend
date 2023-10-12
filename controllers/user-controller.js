@@ -39,14 +39,20 @@ const registerUser = async (req, res) => {
       throw new ValidateError(errors.array()[0].msg);
     }
 
-    const { email, name } = req.body;
+    const { email, name, domain } = req.body;
 
     const [user, created] = await models["User"].findOrCreate({
       where: {
         email,
         name,
+        domain,
       },
-      attributes: ["id", "email", "name"],
+      defaults: {
+        email,
+        name,
+        domain,
+      },
+      attributes: ["id", "email", "name", "domain"],
     });
 
     if (!created) {
@@ -76,13 +82,14 @@ const getUser = async (req, res) => {
       throw new ValidateError(errors.array()[0].msg);
     }
 
-    const { email } = req.params;
+    const { email, domain } = req.params;
 
     const user = await models["User"].findOne({
       where: {
         email,
+        domain,
       },
-      attributes: ["id", "email", "name", "wallet"],
+      attributes: ["id", "email", "name", "wallet", "domain"],
     });
 
     if (!user) {
@@ -112,11 +119,25 @@ const getCampain = async (req, res) => {
       throw new ValidateError(errors.array()[0].msg);
     }
 
-    const { id } = req.params;
+    const { identifier } = req.params;
+
+    const client = await models["Client"].findOne({
+      where: {
+        identifier: identifier,
+      },
+    });
+
+    if (!client) {
+      return res.status(200).json({
+        status: false,
+        msg: "Client does not exists",
+        data: {},
+      });
+    }
 
     const campaign = await models["Campaign"].findOne({
       where: {
-        id,
+        id: client.active_campaign,
       },
       attributes: [
         "id",
@@ -164,11 +185,12 @@ const submitResponse = async (req, res) => {
       throw new ValidateError(errors.array()[0].msg);
     }
 
-    const { email, campaign_id, response } = req.body;
+    const { email, identifier, response, domain } = req.body;
 
     const user = await models["User"].findOne({
       where: {
         email,
+        domain,
       },
     });
 
@@ -180,9 +202,23 @@ const submitResponse = async (req, res) => {
       });
     }
 
+    const client = await models["Client"].findOne({
+      where: {
+        identifier: identifier,
+      },
+    });
+
+    if (!client) {
+      return res.status(200).json({
+        status: false,
+        msg: "Client does not exists",
+        data: {},
+      });
+    }
+
     const campaign = await models["Campaign"].findOne({
       where: {
-        id: campaign_id,
+        id: client.active_campaign,
       },
     });
 
@@ -194,9 +230,7 @@ const submitResponse = async (req, res) => {
       });
     }
 
-    const [campaignResponse, created] = await models[
-      "CampaignResponse"
-    ].findOrCreate({
+    const [_, created] = await models["CampaignResponse"].findOrCreate({
       where: { user_id: user.id, campaign_id: campaign.id },
       defaults: {
         response,
@@ -230,11 +264,12 @@ const getParticipatedCampaigns = async (req, res) => {
       throw new ValidateError(errors.array()[0].msg);
     }
 
-    const { email } = req.params;
+    const { email, domain } = req.params;
 
     const user = await models["User"].findOne({
       where: {
         email,
+        domain,
       },
     });
 
@@ -274,11 +309,12 @@ const getResponses = async (req, res) => {
       throw new ValidateError(errors.array()[0].msg);
     }
 
-    const { email, campaign_id } = req.body;
+    const { email, campaign_id, domain } = req.body;
 
     const user = await models["User"].findOne({
       where: {
         email,
+        domain,
       },
     });
 
@@ -351,6 +387,7 @@ const getCoupon = async (req, res) => {
     const user = await models["User"].findOne({
       where: {
         email,
+        domain,
       },
     });
 

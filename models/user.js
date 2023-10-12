@@ -29,6 +29,10 @@ module.exports = function (sequelize, DataTypes) {
           },
         },
       },
+      domain: {
+        allowNull: false,
+        type: DataTypes.STRING,
+      },
       wallet: {
         allowNull: true,
         type: DataTypes.FLOAT,
