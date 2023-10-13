@@ -13,12 +13,8 @@ module.exports = function (sequelize, DataTypes) {
         type: DataTypes.STRING,
       },
       email: {
-        allowNull: false,
+        allowNull: true,
         type: DataTypes.STRING,
-        unique: {
-          args: true,
-          msg: "Email address already in use!",
-        },
         validate: {
           len: {
             args: [6, 128],
@@ -29,8 +25,12 @@ module.exports = function (sequelize, DataTypes) {
           },
         },
       },
+      shopifyUserID: {
+        allowNull: true,
+        type: DataTypes.STRING,
+      },
       domain: {
-        allowNull: false,
+        allowNull: true,
         type: DataTypes.STRING,
       },
       wallet: {

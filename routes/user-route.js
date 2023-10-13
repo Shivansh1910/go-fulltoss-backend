@@ -11,10 +11,15 @@ router.post(
   "/register",
 
   body("email")
-    .notEmpty()
-    .withMessage("Email is required")
+    .optional()
     .isEmail()
     .withMessage("Invalid Email")
+    .trim()
+    .escape(),
+
+  body("shopifyUserID")
+    .isString()
+    .withMessage("Invalid Shopify User ID")
     .trim()
     .escape(),
 
@@ -26,13 +31,11 @@ router.post(
 );
 
 router.get(
-  "/user/:email/:domain",
+  "/user/:shopifyUserID/:domain",
 
-  param("email")
+  param("shopifyUserID")
     .notEmpty()
-    .withMessage("Email is required")
-    .isEmail()
-    .withMessage("Invalid Email")
+    .withMessage("shopifyUserID is required")
     .trim()
     .escape(),
 
@@ -42,11 +45,11 @@ router.get(
 );
 
 router.get(
-  "/campaign/:identifier",
+  "/campaign/:domain",
 
-  param("identifier")
+  param("domain")
     .notEmpty()
-    .withMessage("Client identifier is required")
+    .withMessage("Client domain is required")
     .trim()
     .escape(),
 
@@ -56,21 +59,13 @@ router.get(
 router.post(
   "/submitResponse",
 
-  body("identifier")
+  body("shopifyUserID")
     .notEmpty()
-    .withMessage("Client Identifier is required")
+    .withMessage("shopifyUserID is required")
     .trim()
     .escape(),
 
   body("domain").notEmpty().withMessage("Domain is required").trim().escape(),
-
-  body("email")
-    .notEmpty()
-    .withMessage("Email is required")
-    .isEmail()
-    .withMessage("Invalid Email")
-    .trim()
-    .escape(),
 
   body("response")
     .notEmpty()
@@ -88,13 +83,11 @@ router.post(
 );
 
 router.get(
-  "/getParticipatedCampaigns/:email/:domain",
+  "/getParticipatedCampaigns/:shopifyUserID/:domain",
 
-  param("email")
+  param("shopifyUserID")
     .notEmpty()
-    .withMessage("Email is required")
-    .isEmail()
-    .withMessage("Invalid Email")
+    .withMessage("shopifyUserID is required")
     .trim()
     .escape(),
 
@@ -105,11 +98,10 @@ router.get(
 
 router.post(
   "/getResponses",
-  body("email")
+
+  body("shopifyUserID")
     .notEmpty()
-    .withMessage("Email is required")
-    .isEmail()
-    .withMessage("Invalid Email")
+    .withMessage("shopifyUserID is required")
     .trim()
     .escape(),
 
@@ -125,13 +117,11 @@ router.post(
 );
 
 router.get(
-  "/getCoupon/:email/:domain",
+  "/getCoupon/:shopifyUserID/:domain",
 
-  param("email")
+  param("shopifyUserID")
     .notEmpty()
-    .withMessage("Email is required")
-    .isEmail()
-    .withMessage("Invalid Email")
+    .withMessage("shopifyUserID is required")
     .trim()
     .escape(),
 

@@ -17,6 +17,10 @@ module.exports = function (sequelize, DataTypes) {
         type: DataTypes.FLOAT,
       },
       email: {
+        allowNull: true,
+        type: DataTypes.STRING,
+      },
+      shopifyUserID: {
         allowNull: false,
         type: DataTypes.STRING,
       },
@@ -36,7 +40,7 @@ module.exports = function (sequelize, DataTypes) {
 
   Coupon.associate = function (models) {};
 
-  Coupon.sync({ alter: true });
+  Coupon.sync();
 
   return Coupon;
 };

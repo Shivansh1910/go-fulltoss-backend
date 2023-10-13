@@ -39,20 +39,20 @@ const registerUser = async (req, res) => {
       throw new ValidateError(errors.array()[0].msg);
     }
 
-    const { email, name, domain } = req.body;
+    const { email, name, domain, shopifyUserID } = req.body;
 
     const [user, created] = await models["User"].findOrCreate({
       where: {
-        email,
-        name,
         domain,
+        shopifyUserID: shopifyUserID,
       },
       defaults: {
         email,
         name,
         domain,
+        shopifyUserID,
       },
-      attributes: ["id", "email", "name", "domain"],
+      attributes: ["id", "email", "name", "domain", "shopifyUserID"],
     });
 
     if (!created) {
@@ -82,14 +82,14 @@ const getUser = async (req, res) => {
       throw new ValidateError(errors.array()[0].msg);
     }
 
-    const { email, domain } = req.params;
+    const { domain, shopifyUserID } = req.params;
 
     const user = await models["User"].findOne({
       where: {
-        email,
         domain,
+        shopifyUserID,
       },
-      attributes: ["id", "email", "name", "wallet", "domain"],
+      attributes: ["id", "email", "name", "wallet", "domain", "shopifyUserID"],
     });
 
     if (!user) {
@@ -119,11 +119,11 @@ const getCampain = async (req, res) => {
       throw new ValidateError(errors.array()[0].msg);
     }
 
-    const { identifier } = req.params;
+    const { domain } = req.params;
 
     const client = await models["Client"].findOne({
       where: {
-        identifier: identifier,
+        domain: domain,
       },
     });
 
@@ -185,12 +185,12 @@ const submitResponse = async (req, res) => {
       throw new ValidateError(errors.array()[0].msg);
     }
 
-    const { email, identifier, response, domain } = req.body;
+    const { response, domain, shopifyUserID } = req.body;
 
     const user = await models["User"].findOne({
       where: {
-        email,
         domain,
+        shopifyUserID,
       },
     });
 
@@ -204,7 +204,7 @@ const submitResponse = async (req, res) => {
 
     const client = await models["Client"].findOne({
       where: {
-        identifier: identifier,
+        domain: domain,
       },
     });
 
@@ -264,12 +264,12 @@ const getParticipatedCampaigns = async (req, res) => {
       throw new ValidateError(errors.array()[0].msg);
     }
 
-    const { email, domain } = req.params;
+    const { domain, shopifyUserID } = req.params;
 
     const user = await models["User"].findOne({
       where: {
-        email,
         domain,
+        shopifyUserID,
       },
     });
 
@@ -309,12 +309,12 @@ const getResponses = async (req, res) => {
       throw new ValidateError(errors.array()[0].msg);
     }
 
-    const { email, campaign_id, domain } = req.body;
+    const { campaign_id, domain, shopifyUserID } = req.body;
 
     const user = await models["User"].findOne({
       where: {
-        email,
         domain,
+        shopifyUserID,
       },
     });
 
@@ -382,12 +382,12 @@ const getCoupon = async (req, res) => {
       throw new ValidateError(errors.array()[0].msg);
     }
 
-    const { email, domain } = req.params;
+    const { domain, shopifyUserID } = req.params;
 
     const user = await models["User"].findOne({
       where: {
-        email,
         domain,
+        shopifyUserID,
       },
     });
 
@@ -401,7 +401,7 @@ const getCoupon = async (req, res) => {
 
     const coupons = await models["Coupon"].findAll({
       where: {
-        email,
+        shopifyUserID,
         domain,
       },
     });

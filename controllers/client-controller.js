@@ -2,7 +2,7 @@ require("dotenv").config();
 const { validationResult } = require("express-validator");
 const Error = require("../exceptions/error");
 const ValidateError = Error.ValidateError;
-const { generateIdentifier } = require("../helpers/generateIdentifier");
+const { generateIdentifier } = require("../helper/generateIdentifier");
 
 const models = require("../models");
 

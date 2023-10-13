@@ -15,6 +15,7 @@ module.exports = function (sequelize, DataTypes) {
       domain: {
         allowNull: false,
         type: DataTypes.STRING,
+        unique: true,
       },
       active: {
         allowNull: false,
